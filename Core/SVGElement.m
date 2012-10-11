@@ -152,7 +152,7 @@
 				return;
 			}
 			NSString* command = [transformString substringToIndex:loc.location];
-			NSArray* parameterStrings = [[transformString substringFromIndex:loc.location+1] componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@","]];
+			NSArray* parameterStrings = [[transformString substringFromIndex:loc.location+1] componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" ,"]];
 			
 			if( [command isEqualToString:@"translate"] )
 			{
@@ -162,6 +162,68 @@
 				CGAffineTransform nt = CGAffineTransformMakeTranslation(xtrans, ytrans);
 				self.transformRelative = CGAffineTransformConcat( self.transformRelative, nt );
 				
+			}
+            else if( [command isEqualToString:@"scale"] )
+			{
+				NSArray *scaleStrings = [[parameterStrings objectAtIndex:0] componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+				
+				CGFloat xScale = [(NSString*)[scaleStrings objectAtIndex:0] floatValue];
+				CGFloat yScale = [scaleStrings count] > 1 ? [(NSString*)[scaleStrings objectAtIndex:1] floatValue] : xScale;
+				
+				CGAffineTransform nt = CGAffineTransformMakeScale(xScale, yScale);
+				self.transformRelative = CGAffineTransformConcat( self.transformRelative, nt );
+			}
+			else if( [command isEqualToString:@"matrix"] )
+			{
+				CGFloat a = [(NSString*)[parameterStrings objectAtIndex:0] floatValue];
+				CGFloat b = [(NSString*)[parameterStrings objectAtIndex:1] floatValue];
+				CGFloat c = [(NSString*)[parameterStrings objectAtIndex:2] floatValue];
+				CGFloat d = [(NSString*)[parameterStrings objectAtIndex:3] floatValue];
+				CGFloat tx = [(NSString*)[parameterStrings objectAtIndex:4] floatValue];
+				CGFloat ty = [(NSString*)[parameterStrings objectAtIndex:5] floatValue];
+				
+				CGAffineTransform nt = CGAffineTransformMake(a, b, c, d, tx, ty );
+				self.transformRelative = CGAffineTransformConcat( self.transformRelative, nt );
+				
+			}
+			else if( [command isEqualToString:@"rotate"] )
+			{
+				/**
+				 This section merged from warpflyght's commit:
+				 
+				 https://github.com/warpflyght/SVGKit/commit/c1bd9b3d0607635dda14ec03579793fc682763d9
+				 
+				 */
+				NSArray *rotateStrings = [[parameterStrings objectAtIndex:0] componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+				if( [rotateStrings count] == 1)
+				{
+					CGFloat degrees = [[rotateStrings objectAtIndex:0] floatValue];
+					CGFloat radians = degrees * M_PI / 180.0;
+					
+					CGAffineTransform nt = CGAffineTransformMakeRotation(radians);
+					self.transformRelative = CGAffineTransformConcat( self.transformRelative, nt );
+				}
+				else if( [rotateStrings count] == 3)
+				{
+					CGFloat degrees = [[rotateStrings objectAtIndex:0] floatValue];
+					CGFloat radians = degrees * M_PI / 180.0;
+					CGFloat centerX = [[rotateStrings objectAtIndex:1] floatValue];
+					CGFloat centerY = [[rotateStrings objectAtIndex:2] floatValue];
+					CGAffineTransform nt = CGAffineTransformIdentity;
+					nt = CGAffineTransformConcat( nt, CGAffineTransformMakeTranslation(centerX, centerY) );
+					nt = CGAffineTransformConcat( nt, CGAffineTransformMakeRotation(radians) );
+					nt = CGAffineTransformConcat( nt, CGAffineTransformMakeTranslation(-1.0 * centerX, -1.0 * centerY) );
+					self.transformRelative = CGAffineTransformConcat( self.transformRelative, nt );
+					} else
+					{
+					NSLog(@"[%@] ERROR: input file is illegal, has an SVG matrix transform attribute without the required 1 or 3 parameters. Item = %@, transform attribute value = %@", [self class], transformString, value );
+					return;
+				}
+			}
+			else
+			{
+				NSLog(@"[%@] ERROR: unsupported SVG transform command (probably legal, but not implemented yet by SVGKit): %@", [self class], command );
+				NSAssert( FALSE, @"Not implemented yet: transform = %@ %@", command, transformString );
 			}
 		}];
 		

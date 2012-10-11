@@ -7,10 +7,14 @@
 //
 
 #import "SVGTextElement.h"
+#import "UIColor-Expanded.h"
 
 #if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
 #endif
+
+#define DEFAULT_FONT_FAMILY @"Helvetica"
+#define DEFAULT_FILL [UIColor blackColor]
 
 @implementation SVGTextElement
 
@@ -27,6 +31,25 @@
 @synthesize y = _y;
 @synthesize fontFamily = _fontFamily;
 @synthesize fontSize = _fontSize;
+@synthesize fill = _fill;
+
+- (NSString *)fontFamily
+{
+    if(!_fontFamily || ![[UIFont familyNames] containsObject:_fontFamily]) {
+        return DEFAULT_FONT_FAMILY;
+    } else {
+        return _fontFamily;
+    }
+}
+
+- (UIColor *)fill
+{
+    if(!_fill) {
+        return DEFAULT_FILL;
+    } else {
+        return _fill;
+    }
+}
 
 - (void)dealloc {
     [_fontFamily release];
@@ -47,6 +70,22 @@
 		_y = [value floatValue];
 	}
     
+    if ((value = [attributes objectForKey:@"font-family"])) {
+        self.fontFamily = value;
+    }
+    
+    if ((value = [attributes objectForKey:@"font-size"])) {
+        self.fontSize = [value floatValue];
+    }
+    
+    if ((value = [attributes objectForKey:@"fill"])) {
+        self.fill = [UIColor colorWithHexString:value];
+    }
+    
+    if ((value = [attributes objectForKey:@"fill-opacity"])) {
+        self.fill = [UIColor colorWithRed:self.fill.red green:self.fill.green blue:self.fill.blue alpha:[value floatValue]];
+    }
+    
     // TODO: class
     // TODO: style
     // TODO: externalResourcesRequired
@@ -58,23 +97,23 @@
     // TODO: dy
     // TODO: fill
     
-    //     fill = "#000000";
-//    "fill-opacity" = 1;
-//    "font-family" = Sans;
-//    "font-size" = "263.27566528px";
-//    "font-stretch" = normal;
-//    "font-style" = normal;
-//    "font-variant" = normal;
-//    "font-weight" = normal;
-//    id = text2816;
-//    "line-height" = "125%";
-//    linespacing = "125%";
-//    space = preserve;
-//    stroke = none;
-//    "text-align" = start;
-//    "text-anchor" = start;
-//    transform = "scale(0.80449853,1.2430103)";
-//    "writing-mode" = "lr-tb";
+//     fill = "#000000";                            +
+//    "fill-opacity" = 1;                           +
+//    "font-family" = Sans;                         +
+//    "font-size" = "263.27566528px";               +
+//    "font-stretch" = normal;                      -
+//    "font-style" = normal;                        -
+//    "font-variant" = normal;                      -
+//    "font-weight" = normal;                       -
+//    id = text2816;                                -
+//    "line-height" = "125%";                       -
+//    linespacing = "125%";                         -
+//    space = preserve;                             -
+//    stroke = none;                                -
+//    "text-align" = start;                         -
+//    "text-anchor" = start;                        -
+//    transform = "scale(0.80449853,1.2430103)";    -
+//    "writing-mode" = "lr-tb";                     -
 
 }
 
@@ -82,18 +121,31 @@
 #if TARGET_OS_IPHONE
     NSString* textToDraw = self.stringValue;
     
-    UIFont* fontToDraw = [UIFont fontWithName:_fontFamily
-                                         size:_fontSize];
+    UIFont* fontToDraw = [UIFont fontWithName:self.fontFamily
+                                         size:self.fontSize];
     CGSize sizeOfTextRect = [textToDraw sizeWithFont:fontToDraw];
     
     CATextLayer *label = [[[CATextLayer alloc] init] autorelease];
     [label setName:self.identifier];
-    [label setFont:_fontFamily];
-    [label setFontSize:_fontSize];  
-    [label setFrame:CGRectMake(_x, _y, sizeOfTextRect.width, sizeOfTextRect.height)];
+    [label setFont:self.fontFamily];
+    [label setFontSize:self.fontSize];
+    //making the text to draw at the correct point (baseline beginning)
+    //moved to transforms
+    [label setFrame:CGRectMake(0, 0, sizeOfTextRect.width, sizeOfTextRect.height)];
     [label setString:textToDraw];
     [label setAlignmentMode:kCAAlignmentLeft];
-    [label setForegroundColor:[[UIColor blackColor] CGColor]];
+    [label setForegroundColor:[self.fill CGColor]];
+    
+    label.contentsScale = [[UIScreen mainScreen] scale];
+    
+    //rotating around basepoint
+    CGAffineTransform tr1 = CGAffineTransformMakeTranslation(sizeOfTextRect.width/2, sizeOfTextRect.height/2);
+    CGAffineTransform tr2 = CGAffineTransformConcat(tr1, self.transformAbsolute);
+    CGAffineTransform tr3 = CGAffineTransformConcat(tr2, CGAffineTransformInvert(tr1));
+    
+    tr3 = CGAffineTransformConcat(CGAffineTransformMakeTranslation(_x, _y - fontToDraw.ascender), tr3);
+    
+    [label setAffineTransform:tr3];
     
     return label;
 #else

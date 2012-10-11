@@ -14,6 +14,7 @@
 #import "SVGRectElement.h"
 #import "SVGTitleElement.h"
 #import "SVGElement+Private.h"
+#import "SVGTextElement.h"
 
 #import "SVGPointsAndPathsParser.h"
 
@@ -38,6 +39,7 @@ static NSDictionary *elementMap;
                           [SVGPolygonElement class], @"polygon",
                           [SVGPolylineElement class], @"polyline",
                           [SVGRectElement class], @"rect",
+                          [SVGTextElement class], @"text",
                           [SVGTitleElement class], @"title", nil] retain];
             
 		}

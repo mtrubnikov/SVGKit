@@ -19,6 +19,7 @@
 @property (readwrite,nonatomic,assign) CGFloat y;
 @property (readwrite,nonatomic,retain) NSString* fontFamily;
 @property (readwrite,nonatomic,assign) CGFloat fontSize;
+@property (readwrite,nonatomic,retain) UIColor *fill;
 
 // TODO: class
 // TODO: style
