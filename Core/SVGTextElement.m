@@ -139,13 +139,14 @@
     label.contentsScale = [[UIScreen mainScreen] scale];
     
     //rotating around basepoint
-    CGAffineTransform tr1 = CGAffineTransformMakeTranslation(sizeOfTextRect.width/2, sizeOfTextRect.height/2);
+    CGAffineTransform tr1 = CGAffineTransformIdentity; //CGAffineTransformConcat(CGAffineTransformInvert(self.transformRelative), self.transformAbsolute);
+    tr1 = CGAffineTransformConcat(tr1, CGAffineTransformMakeTranslation(sizeOfTextRect.width/2, sizeOfTextRect.height/2));
     CGAffineTransform tr2 = CGAffineTransformConcat(tr1, self.transformAbsolute);
-    CGAffineTransform tr3 = CGAffineTransformConcat(tr2, CGAffineTransformInvert(tr1));
+    tr2 = CGAffineTransformConcat(tr2, CGAffineTransformInvert(tr1));
     
-    tr3 = CGAffineTransformConcat(CGAffineTransformMakeTranslation(_x, _y - fontToDraw.ascender), tr3);
+    tr2 = CGAffineTransformConcat(CGAffineTransformMakeTranslation(_x, _y - fontToDraw.ascender), tr2);
     
-    [label setAffineTransform:tr3];
+    [label setAffineTransform:tr2];
     
     return label;
 #else
