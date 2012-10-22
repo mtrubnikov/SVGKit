@@ -10,6 +10,8 @@
 
 #import "SVGStyleCatcher.h"
 
+#define OUTLINE_SHAPES 0
+
 @class SVGDocument;
 
 #define EXPERIMENTAL_SUPPORT_FOR_SVG_TRANSFORM_ATTRIBUTES 1

@@ -27,6 +27,9 @@ typedef enum {
     CGColorRef _strokeCG, _fillCG; //limit # of instances?
 }
 
+@property (nonatomic, readonly) CGFloat x;
+@property (nonatomic, readonly) CGFloat y;
+
 @property (nonatomic, readwrite) CGFloat opacity;
 
 @property (nonatomic, readonly) NSString *fillId;

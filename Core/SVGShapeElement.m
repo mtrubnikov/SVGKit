@@ -20,6 +20,9 @@
 
 #define IDENTIFIER_LEN 256
 
+@synthesize x = _x;
+@synthesize y = _y;
+
 @synthesize opacity = _opacity;
 
 @synthesize fillType = _fillType;
@@ -81,6 +84,14 @@
         attributes = [(SVGGroupElement *)self.parent fillBlanksInDictionary:attributes];
     
 	id value = nil;
+    
+    if ((value = [attributes objectForKey:@"x"])) {
+		_x = [value floatValue];
+	}
+	
+	if ((value = [attributes objectForKey:@"y"])) {
+		_y = [value floatValue];
+	}
     
     if( (value = [attributes objectForKey:@"class"] ) )
     {
@@ -149,7 +160,7 @@
 	}
 	
 	if (aPath) {
-//        _layerRect = CGRectIntegral(CGPathGetPathBoundingBox(aPath));
+        _layerRect = CGRectIntegral(CGPathGetPathBoundingBox(aPath));
 //        CGPoint origin = _layerRect.origin;
 //        aPath = CGPathCreateByOffsettingPath(aPath, origin.x, origin.y);
 //		_path = aPath;
@@ -165,19 +176,10 @@
 	_shapeLayer.opacity = _opacity;
     
     
-	
-#if EXPERIMENTAL_SUPPORT_FOR_SVG_TRANSFORM_ATTRIBUTES
-	CGAffineTransform svgEffectiveTransform = [self transformAbsolute];
-#endif
-	
-#if OUTLINE_SHAPES
-	
-#if TARGET_OS_IPHONE
-	_shapeLayer.borderColor = [UIColor redColor].CGColor;
-#endif
-	
-	_shapeLayer.borderWidth = 1.0f;
-#endif
+//unused
+//#if EXPERIMENTAL_SUPPORT_FOR_SVG_TRANSFORM_ATTRIBUTES
+//	CGAffineTransform svgEffectiveTransform = [self transformAbsolute];
+//#endif
 	
     
     //stich: i found this to be unnecessar in practice but maybe I was wrong, this operation is happening in loadPath now (less total paths if document is reused)
@@ -196,12 +198,13 @@
 //    else
 //        [_shapeLayer setValue:[NSValue valueWithCGPoint:origin] forKey:@"debugSomeStuff"];
     
-//	CGPathRef path = CGPathCreateByOffsettingPath(_path, origin.x, origin.y);
+	CGPathRef path = CGPathCreateByOffsettingPath(_path, _layerRect.origin.x, _layerRect.origin.y);
 	
-	_shapeLayer.path = _path;
-//	CGPathRelease(path);
+	_shapeLayer.path = path;
+	CGPathRelease(path);
 	
 	_shapeLayer.frame = _layerRect;
+//    CGRectMake(0, 0, _layerRect.size.width, _layerRect.size.height);
     
 //#warning Sorry adam, I had to disable this to make sure my stuff was working post-merge
 
@@ -231,30 +234,34 @@
 	 */
     
 #endif
-	CGAffineTransform transformFromSVGUnitsToScreenUnits;
-
-	#if ADAM_IS_FIXING_THE_TRANSFORM_AND_VIEW_BOX_CODE
-	if( CGRectIsNull( self.document.viewBoxFrame ) )
-#endif
-		transformFromSVGUnitsToScreenUnits = CGAffineTransformIdentity;
-	#if ADAM_IS_FIXING_THE_TRANSFORM_AND_VIEW_BOX_CODE
-	else
-		transformFromSVGUnitsToScreenUnits = CGAffineTransformMakeScale( self.document.width / self.document.viewBoxFrame.size.width,
-																		 self.document.height / self.document.viewBoxFrame.size.height );
-#endif
+//	CGAffineTransform transformFromSVGUnitsToScreenUnits;
+//
+//	#if ADAM_IS_FIXING_THE_TRANSFORM_AND_VIEW_BOX_CODE
+//	if( CGRectIsNull( self.document.viewBoxFrame ) )
+//#endif
+//		transformFromSVGUnitsToScreenUnits = CGAffineTransformIdentity;
+//	#if ADAM_IS_FIXING_THE_TRANSFORM_AND_VIEW_BOX_CODE
+//	else
+//		transformFromSVGUnitsToScreenUnits = CGAffineTransformMakeScale( self.document.width / self.document.viewBoxFrame.size.width,
+//																		 self.document.height / self.document.viewBoxFrame.size.height );
+//#endif
 	
-	CGMutablePathRef pathToPlaceInLayer = CGPathCreateMutable();
-	CGPathAddPath( pathToPlaceInLayer, &transformFromSVGUnitsToScreenUnits, _path);	
+//	CGMutablePathRef pathToPlaceInLayer = CGPathCreateMutable();
+//	CGPathAddPath( pathToPlaceInLayer, &transformFromSVGUnitsToScreenUnits, _path);
+//	
+//    CGRect rect = CGRectIntegral(CGPathGetPathBoundingBox( pathToPlaceInLayer ));
+//    CGRect rect = CGRectIntegral(CGPathGetPathBoundingBox( _path ));
 	
-    CGRect rect = CGRectIntegral(CGPathGetPathBoundingBox( pathToPlaceInLayer ));
-	
-	CGPathRef finalPath = CGPathCreateByOffsettingPath( pathToPlaceInLayer, rect.origin.x, rect.origin.y );
+//что за хуйня?
+//эта сцука сдвигает все элементы в -x, -y!
+//	CGPathRef finalPath = CGPathCreateByOffsettingPath( pathToPlaceInLayer, rect.origin.x, rect.origin.y );
+// 	CGPathRef finalPath = CGPathCreateByOffsettingPath( _path, rect.origin.x, rect.origin.y );
 
 	/** Can't use this - iOS 5 only! path = CGPathCreateCopyByTransformingPath(path, transformFromSVGUnitsToScreenUnits ); */
 	
-	_shapeLayer.path = finalPath;
-	CGPathRelease(finalPath);
-	CGPathRelease(pathToPlaceInLayer);
+//	_shapeLayer.path = _path;
+//	CGPathRelease(finalPath);
+//	CGPathRelease(pathToPlaceInLayer);
 
 //#if EXPERIMENTAL_SUPPORT_FOR_SVG_TRANSFORM_ATTRIBUTES
 //	/**
@@ -274,10 +281,15 @@
 //	_shapeLayer.frame = rect;
 //#endif
     
-    //rotating around basepoint
-    CGAffineTransform tr3 = CGAffineTransformConcat(CGAffineTransformMakeTranslation(rect.origin.x, rect.origin.y), self.transformAbsolute);
+//    _shapeLayer.frame = rect;
     
-    [_shapeLayer setAffineTransform:tr3];
+    //rotating around basepoint
+//    CGAffineTransform tr3 = CGAffineTransformConcat(CGAffineTransformMakeTranslation(rect.origin.x, rect.origin.y), self.transformAbsolute);
+    
+//    [_shapeLayer setAffineTransform:self.transformRelative];
+    CGAffineTransform tr1 = self.transformRelative;
+    tr1 = CGAffineTransformConcat(CGAffineTransformMakeTranslation(_x, _y), tr1);
+    [_shapeLayer setAffineTransform:tr1];
 	
 	if (_strokeWidth) {
 		_shapeLayer.lineWidth = _strokeWidth;
@@ -304,6 +316,34 @@
     if (nil != _fillPattern) {
         _shapeLayer.fillColor = [_fillPattern CGColor];
     }
+    
+    
+#if OUTLINE_SHAPES
+	
+#if TARGET_OS_IPHONE
+	_shapeLayer.borderColor = [UIColor greenColor].CGColor;
+#endif
+	
+	_shapeLayer.borderWidth = 1.0f;
+    
+    NSString* textToDraw = [NSString stringWithFormat:@"%@ (%@): {%.1f, %.1f} {%.1f, %.1f}", self.identifier, [self class], _shapeLayer.frame.origin.x, _shapeLayer.frame.origin.y, _shapeLayer.frame.size.width, _shapeLayer.frame.size.height];
+    
+    UIFont* fontToDraw = [UIFont fontWithName:@"Helvetica"
+                                         size:10.0f];
+    CGSize sizeOfTextRect = [textToDraw sizeWithFont:fontToDraw];
+    
+    CATextLayer *debugText = [[[CATextLayer alloc] init] autorelease];
+    [debugText setFont:@"Helvetica"];
+    [debugText setFontSize:10.0f];
+    [debugText setFrame:CGRectMake(0, 0, sizeOfTextRect.width, sizeOfTextRect.height)];
+    [debugText setString:textToDraw];
+    [debugText setAlignmentMode:kCAAlignmentLeft];
+    [debugText setForegroundColor:[UIColor greenColor].CGColor];
+    [debugText setContentsScale:[[UIScreen mainScreen] scale]];
+    [debugText setShouldRasterize:NO];
+    [_shapeLayer addSublayer:debugText];
+    
+#endif
 	
     
 #ifndef STATIC_COLORS 
@@ -328,6 +368,6 @@
 	return returnLayer;
 }
 
-- (void)layoutLayer:(CALayer *)layer { }
+- (void)layoutLayer:(CALayer *)layer {  }
 
 @end

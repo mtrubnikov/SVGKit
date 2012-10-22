@@ -2,8 +2,6 @@
 //  CALayerWithChildHitTest.m
 //  SVGKit
 //
-//  Created by adam on 27/11/2011.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
 //
 
 #import "CALayerWithChildHitTest.h"
@@ -12,7 +10,7 @@
 
 - (BOOL) containsPoint:(CGPoint)p
 {
-	BOOL boundsContains = CGRectContainsPoint(self.bounds, p);
+	BOOL boundsContains = CGRectContainsPoint(self.bounds, p); // must be BOUNDS because Apple pre-converts the point to local co-ords before running the test
 	
 	if( boundsContains )
 	{
@@ -20,7 +18,11 @@
 		
 		for( CALayer* subLayer in self.sublayers )
 		{
-			if( [subLayer containsPoint:p] )
+			// must pre-convert the point to local co-ords before running the test because Apple defines "containsPoint" in that fashion
+			
+			CGPoint pointInSubLayer = [self convertPoint:p toLayer:subLayer];
+			
+			if( [subLayer containsPoint:pointInSubLayer] )
 			{
 				atLeastOneChildContainsPoint = TRUE;
 				break;

@@ -91,4 +91,14 @@
     [self.layer addSublayer:[document layerTree]];
 }
 
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    UITouch *touch = [touches anyObject];
+    NSLog(@"touches ended at point: %f , %f", [touch locationInView:self].x, [touch locationInView:self].y);
+    CALayer *touchedLayer = [self.layer hitTest:[touch locationInView:self]];
+    NSLog(@"touchedLayer: %@", touchedLayer);
+    [touchedLayer setBackgroundColor:[[UIColor redColor] CGColor]];
+    [super touchesEnded:touches withEvent:event];
+}
+
 @end

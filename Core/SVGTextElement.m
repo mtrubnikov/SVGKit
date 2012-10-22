@@ -135,18 +135,25 @@
     [label setString:textToDraw];
     [label setAlignmentMode:kCAAlignmentLeft];
     [label setForegroundColor:[self.fill CGColor]];
-    
-    label.contentsScale = [[UIScreen mainScreen] scale];
+    [label setContentsScale:[[UIScreen mainScreen] scale]];
+    [label setShouldRasterize:NO];
     
     //rotating around basepoint
-    CGAffineTransform tr1 = CGAffineTransformIdentity; //CGAffineTransformConcat(CGAffineTransformInvert(self.transformRelative), self.transformAbsolute);
-    tr1 = CGAffineTransformConcat(tr1, CGAffineTransformMakeTranslation(sizeOfTextRect.width/2, sizeOfTextRect.height/2));
-    CGAffineTransform tr2 = CGAffineTransformConcat(tr1, self.transformAbsolute);
+    CGAffineTransform tr1 = CGAffineTransformIdentity;
+//    tr1 = CGAffineTransformConcat(tr1, CGAffineTransformMakeTranslation(sizeOfTextRect.width/2, sizeOfTextRect.height/2));
+    CGAffineTransform tr2 = CGAffineTransformConcat(tr1, self.transformRelative);
     tr2 = CGAffineTransformConcat(tr2, CGAffineTransformInvert(tr1));
     
     tr2 = CGAffineTransformConcat(CGAffineTransformMakeTranslation(_x, _y - fontToDraw.ascender), tr2);
     
     [label setAffineTransform:tr2];
+    
+#if OUTLINE_SHAPES
+    
+    label.borderColor = [UIColor blueColor].CGColor;
+    label.borderWidth = 1.0f;
+    
+#endif
     
     return label;
 #else

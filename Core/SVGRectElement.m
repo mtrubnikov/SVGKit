@@ -86,7 +86,8 @@ void CGPathAddRoundedRect (CGMutablePathRef path, CGRect rect, CGFloat radius) {
 	}
 	
 	CGMutablePathRef path = CGPathCreateMutable();
-	CGRect rect = CGRectMake(_x, _y, _width, _height);
+//	CGRect rect = CGRectMake(_x, _y, _width, _height);
+	CGRect rect = CGRectMake(0, 0, _width, _height);
 	
 	if (_rx == 0 && _ry == 0) {
 		CGPathAddRect(path, NULL, rect);
