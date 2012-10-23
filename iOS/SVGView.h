@@ -14,6 +14,7 @@
 }
 
 @property (nonatomic, retain) SVGDocument *document;
+@property (nonatomic, retain) id delegate;
 
 - (id)initWithLayer:(CALayer *)layer andDocument:(SVGDocument *)doc;
 - (id)initWithDocument:(SVGDocument *)document; // set frame to position
@@ -22,5 +23,11 @@
 
 - (void)removeLayers;
 - (void)swapLayer:(CALayer *)layer andDocument:(SVGDocument *)doc;
+
+@end
+
+@protocol SVGViewDelegate <NSObject>
+
+- (void)touchesEnded:(NSSet *)touches inView:(SVGView *)view  withEvent:(UIEvent *)event;
 
 @end

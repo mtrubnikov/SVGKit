@@ -8,6 +8,7 @@
 
 #import "SVGTextElement.h"
 #import "UIColor-Expanded.h"
+#import "CATextLayerWithHitTest.h"
 
 #if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
@@ -125,7 +126,7 @@
                                          size:self.fontSize];
     CGSize sizeOfTextRect = [textToDraw sizeWithFont:fontToDraw];
     
-    CATextLayer *label = [[[CATextLayer alloc] init] autorelease];
+    CATextLayerWithHitTest *label = [[[CATextLayerWithHitTest alloc] init] autorelease];
     [label setName:self.identifier];
     [label setFont:self.fontFamily];
     [label setFontSize:self.fontSize];
@@ -136,11 +137,11 @@
     [label setAlignmentMode:kCAAlignmentLeft];
     [label setForegroundColor:[self.fill CGColor]];
     [label setContentsScale:[[UIScreen mainScreen] scale]];
+    [label setRasterizationScale:[[UIScreen mainScreen] scale]];
     [label setShouldRasterize:NO];
     
     //rotating around basepoint
     CGAffineTransform tr1 = CGAffineTransformIdentity;
-//    tr1 = CGAffineTransformConcat(tr1, CGAffineTransformMakeTranslation(sizeOfTextRect.width/2, sizeOfTextRect.height/2));
     CGAffineTransform tr2 = CGAffineTransformConcat(tr1, self.transformRelative);
     tr2 = CGAffineTransformConcat(tr2, CGAffineTransformInvert(tr1));
     
@@ -163,7 +164,7 @@
 
 - (void)layoutLayer:(CALayer *)layer
 {
-    
+
 }
 
 @end

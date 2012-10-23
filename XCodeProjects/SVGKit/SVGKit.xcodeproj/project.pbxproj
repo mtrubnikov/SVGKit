@@ -133,6 +133,10 @@
 		D4A800DA1626C3D4004AB402 /* UIColor-Expanded.h in Headers */ = {isa = PBXBuildFile; fileRef = D4A800D71626C3D4004AB402 /* UIColor-Expanded.h */; };
 		D4A800DB1626C3D4004AB402 /* UIColor-Expanded.m in Sources */ = {isa = PBXBuildFile; fileRef = D4A800D81626C3D4004AB402 /* UIColor-Expanded.m */; };
 		D4A800DC1626C3D4004AB402 /* UIColor-Expanded.m in Sources */ = {isa = PBXBuildFile; fileRef = D4A800D81626C3D4004AB402 /* UIColor-Expanded.m */; };
+		D4D1D11516367FB000CCCD11 /* CATextLayerWithHitTest.h in Headers */ = {isa = PBXBuildFile; fileRef = D4D1D11316367FB000CCCD11 /* CATextLayerWithHitTest.h */; };
+		D4D1D11616367FB000CCCD11 /* CATextLayerWithHitTest.h in Headers */ = {isa = PBXBuildFile; fileRef = D4D1D11316367FB000CCCD11 /* CATextLayerWithHitTest.h */; };
+		D4D1D11716367FB000CCCD11 /* CATextLayerWithHitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D4D1D11416367FB000CCCD11 /* CATextLayerWithHitTest.m */; };
+		D4D1D11816367FB000CCCD11 /* CATextLayerWithHitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D4D1D11416367FB000CCCD11 /* CATextLayerWithHitTest.m */; };
 		D78EB3C5156F1190004D745F /* SVGGradientElement.h in Headers */ = {isa = PBXBuildFile; fileRef = D78EB3B9156F1190004D745F /* SVGGradientElement.h */; };
 		D78EB3C6156F1190004D745F /* SVGGradientElement.m in Sources */ = {isa = PBXBuildFile; fileRef = D78EB3BA156F1190004D745F /* SVGGradientElement.m */; };
 		D78EB3C7156F1190004D745F /* SVGGradientStop.h in Headers */ = {isa = PBXBuildFile; fileRef = D78EB3BB156F1190004D745F /* SVGGradientStop.h */; };
@@ -237,6 +241,8 @@
 		D2F7E79907B2D74100F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		D4A800D71626C3D4004AB402 /* UIColor-Expanded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor-Expanded.h"; sourceTree = "<group>"; };
 		D4A800D81626C3D4004AB402 /* UIColor-Expanded.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor-Expanded.m"; sourceTree = "<group>"; };
+		D4D1D11316367FB000CCCD11 /* CATextLayerWithHitTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CATextLayerWithHitTest.h; sourceTree = "<group>"; };
+		D4D1D11416367FB000CCCD11 /* CATextLayerWithHitTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CATextLayerWithHitTest.m; sourceTree = "<group>"; };
 		D78EB3B9156F1190004D745F /* SVGGradientElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVGGradientElement.h; sourceTree = "<group>"; };
 		D78EB3BA156F1190004D745F /* SVGGradientElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVGGradientElement.m; sourceTree = "<group>"; };
 		D78EB3BB156F1190004D745F /* SVGGradientStop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVGGradientStop.h; sourceTree = "<group>"; };
@@ -403,6 +409,8 @@
 			children = (
 				D78EB3B8156F1190004D745F /* Elements */,
 				D78EB3C0156F1190004D745F /* ParserExtentions */,
+				D4D1D11316367FB000CCCD11 /* CATextLayerWithHitTest.h */,
+				D4D1D11416367FB000CCCD11 /* CATextLayerWithHitTest.m */,
 				66213546148AF80A006881E1 /* CALayerWithChildHitTest.h */,
 				66213547148AF80A006881E1 /* CALayerWithChildHitTest.m */,
 				66213548148AF80A006881E1 /* CAShapeLayerWithHitTest.h */,
@@ -551,6 +559,7 @@
 				D78EB3CC156F1190004D745F /* SVGParserGradient.h in Headers */,
 				D78EB3CE156F1190004D745F /* SVGParserStyles.h in Headers */,
 				D4A800DA1626C3D4004AB402 /* UIColor-Expanded.h in Headers */,
+				D4D1D11616367FB000CCCD11 /* CATextLayerWithHitTest.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -594,6 +603,7 @@
 				D78EB3D9156F12A1004D745F /* SVGStyleCatcher.h in Headers */,
 				D78EB3DA156F12A1004D745F /* SVGStyleElement.h in Headers */,
 				D4A800D91626C3D4004AB402 /* UIColor-Expanded.h in Headers */,
+				D4D1D11516367FB000CCCD11 /* CATextLayerWithHitTest.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -732,6 +742,7 @@
 				D78EB3CD156F1190004D745F /* SVGParserGradient.m in Sources */,
 				D78EB3CF156F1190004D745F /* SVGParserStyles.m in Sources */,
 				D4A800DC1626C3D4004AB402 /* UIColor-Expanded.m in Sources */,
+				D4D1D11816367FB000CCCD11 /* CATextLayerWithHitTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -771,6 +782,7 @@
 				D78EB3D8156F12A1004D745F /* SVGGradientStop.m in Sources */,
 				D78EB3DB156F12A1004D745F /* SVGStyleElement.m in Sources */,
 				D4A800DB1626C3D4004AB402 /* UIColor-Expanded.m in Sources */,
+				D4D1D11716367FB000CCCD11 /* CATextLayerWithHitTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
