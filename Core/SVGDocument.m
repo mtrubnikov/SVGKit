@@ -411,7 +411,7 @@ static NSCache *_sharedDocuments;
 {
     if( style != nil )
     {
-        //        NSLog(@"Set style for className %@ with properties %@", className, style);
+                NSLog(@"Set style for className %@ with properties %@", className, style);
         if( _styleByClassName == nil )
             _styleByClassName = [[NSMutableDictionary alloc] initWithObjectsAndKeys:style, className, nil];
         else

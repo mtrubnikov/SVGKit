@@ -696,6 +696,7 @@ static NSMutableDictionary *NSDictionaryCreateFromLibxmlAttributes (const xmlCha
                 if( [stringSplitContainer count] >= 2 ) //not necessary unless using shitty svgs
                 {
                     className = [[stringSplitContainer objectAtIndex:0] substringFromIndex:1];
+                    className = [className stringByTrimmingCharactersInSet:whitespaceSet];
                     styleContent = [stringSplitContainer objectAtIndex:1];
                     
                     //                classStyle = [SVGParser NSDictionaryFromCSSAttributes:styleContent];

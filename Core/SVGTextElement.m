@@ -136,9 +136,9 @@
     [label setString:textToDraw];
     [label setAlignmentMode:kCAAlignmentLeft];
     [label setForegroundColor:[self.fill CGColor]];
-    [label setContentsScale:[[UIScreen mainScreen] scale]];
-    [label setRasterizationScale:[[UIScreen mainScreen] scale]];
-    [label setShouldRasterize:NO];
+//    [label setContentsScale:[[UIScreen mainScreen] scale]];
+//    [label setRasterizationScale:[[UIScreen mainScreen] scale]];
+//    [label setShouldRasterize:NO];
     
     //rotating around basepoint
     CGAffineTransform tr1 = CGAffineTransformIdentity;

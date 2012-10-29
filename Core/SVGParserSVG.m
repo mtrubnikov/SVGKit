@@ -109,14 +109,19 @@ static NSSet *_SVGParserSVGSupportedTags;
         
         if( (result = [attributes objectForKey:@"class"]) )
         {
-//            if( [result isKindOfClass:[NSString class]] ) //NSDictionary should do a fine job of making sure we don't get a bogus result if we pass a non NSString
-//            {
-                NSDictionary *thisClassStyle = [svgDocument styleForElement:element withClassName:(NSString *)result];
-                if( thisClassStyle != nil ) //we should 
+            //"class" attribute MAY! contain more than one class name!
+            
+            NSArray *classNamesArray = [(NSString *)result componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" ,"]];
+            
+            [classNamesArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                NSDictionary *thisClassStyle = [svgDocument styleForElement:element withClassName:(NSString *)obj];
+//                NSLog(@"obj: %@ | thisClassStyle %@", obj, thisClassStyle);
+                if( thisClassStyle != nil ) //we should
                 {
                     [attributes addEntriesFromDictionary:thisClassStyle];
                 }
-//            }
+            }];
+            
         }
         
 		id style = nil;
